@@ -9,6 +9,7 @@
 | Package   | Version |
 | --------- | ------- |
 | node      | 15.1.0  |
+| npm       | 6.14.8  |
 | Puppeteer | 8.0.0   |
 
 ## Install & Use
@@ -16,6 +17,15 @@
 ```
 $ npm i
 $ node GetUncatchPokemonInfo.js listing.csv out.md genversion
+```
+
+### Use on linux
+
+Add getUncatchPokemon launch script to your PATH.
+
+```
+$ export PATH=/install/dir/script:${PATH}
+$ getUncatchPokemonInfo listing.csv out.md genversion
 ```
 
 ### Arguments
