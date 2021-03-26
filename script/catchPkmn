@@ -1,0 +1,5 @@
+#!/bin/bash
+
+DIR=`dirname "$(readlink -f "$0")"`
+
+node ${DIR}/../src/checkPokemon.js "$1" "$2"
