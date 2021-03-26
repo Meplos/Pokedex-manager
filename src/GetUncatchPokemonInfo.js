@@ -1,6 +1,13 @@
 const fs = require("fs");
 const puppeteer = require("puppeteer");
 
+/**
+ * Description of all generation pokedex
+ * @param url: pokebip url of the génération
+ * @param pokenumber: index of pokemon number field in the pokedex
+ * @param pokename: index of pokemon name field in the pokedex
+ * @param pokelocate: index of pokemon location field in the pokedex
+ */
 const genMap = {
   1: {
     url: "https://www.pokebip.com/page/jeuxvideo/rbvj/pokedex_kanto",
@@ -66,6 +73,11 @@ const genMap = {
   },
 };
 
+/**
+ * Read csv file and return array
+ * @param file: path of input csv file
+ * @returns array of number
+ */
 function readPkmnIndex(file) {
   const SEPARATOR = ";";
   const buffer = fs.readFileSync(file);
@@ -73,6 +85,11 @@ function readPkmnIndex(file) {
   return list;
 }
 
+/**
+ * extract all data from pokebip.com with puppeteer
+ * @param url: url of pokedex asked
+ * @returns all pokedex information (depends of generation)
+ */
 async function getPokedex(url) {
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -92,42 +109,81 @@ async function getPokedex(url) {
   await browser.close();
   return pkdx;
 }
-
-function writeMarkdown(missing, filename, gen) {
+/**
+ * Write uncatched pokemon information in markdown table
+ * @param uncatched: pokemon uncatched by the user
+ * @param filename: file to write
+ * @param gen: generation object
+ */
+function writeMarkdown(uncatched, filename, gen) {
   fs.writeFileSync(filename, "|Num.|Name|Location|Done?|\n");
   fs.appendFileSync(filename, "|---|---|---|---|\n");
-  for (let i = 0; i < missing.length; i++) {
+  for (let i = 0; i < uncatched.length; i++) {
     fs.appendFileSync(
       filename,
       "|" +
-        missing[i][gen.pokenumber] +
+        uncatched[i][gen.pokenumber] +
         "|" +
-        missing[i][gen.pokename] +
+        uncatched[i][gen.pokename] +
         "|" +
-        missing[i][gen.pokelocate].replace("\n", " ") +
+        uncatched[i][gen.pokelocate].replace("\n", " ") +
         "|❌|\n"
     );
   }
 }
-
-function getMissing(missingIndexList, pkdx) {
-  let missing = [];
-  for (let i = 0; i < missingIndexList.length; i++) {
-    missing[i] = pkdx[missingIndexList[i] - 1];
+/**
+ * Get Uncatch pokemon information
+ * @param  uncatchedIndexList: list of number
+ * @param  pkdx: all pokedex information
+ * @returns list of all pokemon uncatched by the user
+ */
+function getuncatched(uncatchedIndexList, pkdx) {
+  let uncatched = [];
+  for (let i = 0; i < uncatchedIndexList.length; i++) {
+    if (!pkdx[uncatchedIndexList[i] - 1]) {
+      console.log(
+        `POKEMON N°${uncatchedIndexList[i]} doesn't exist in this generation`
+      );
+      continue;
+    }
+    uncatched[i] = pkdx[uncatchedIndexList[i] - 1];
   }
-  return missing;
+  return uncatched;
+}
+
+function displayHelp() {
+  console.log("RUN:");
+  console.log(
+    "\twith node : node src/GetUncatchPokemon input.csv out.md genVersion"
+  );
+  console.log("\tlinux script : getUncatchPokemon input.csv out.md genVersion");
+  console.log("\tw10 script: WIP");
+  console.log("\n");
+  console.log("PARAMETER");
+  console.log(
+    "\tinput.csv: filepath to ; separated number. represent pokemon number in the pokedex.\n" +
+      "\tout.md: file to write table in markdown format\n" +
+      "\tgenVersion: version flags supported by this app. See README for more details"
+  );
 }
 
 function main(argv) {
+  if (argv.includes("-h")) {
+    displayHelp();
+    return;
+  } else if (argv.length < 3) {
+    console.log("ERROR: wrong Number of arguments");
+    displayHelp();
+    return;
+  }
   const indexList = readPkmnIndex(argv[0]);
   const gen = genMap[argv[2]];
   if (!gen) {
     console.log(`ERROR: ${argv[2]} is not supported`);
     return;
   }
-  console.log(gen);
   getPokedex(gen.url).then((res) => {
-    const missPokemon = getMissing(indexList, res);
+    const missPokemon = getuncatched(indexList, res);
     writeMarkdown(missPokemon, argv[1], gen);
   });
 }

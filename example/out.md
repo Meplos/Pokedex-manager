@@ -1,5 +1,5 @@
-| Num. | Name       | Location                | Done? |
-| ---- | ---------- | ----------------------- | ----- |
-| 001  | Bulbizarre | Bourg Palette (Starter) | ❌    |
-| 002  | Herbizarre | Évolution               | ❌    |
-| 003  | Florizarre | Évolution               | ❌    |
+|Num.|Name|Location|Done?|
+|---|---|---|---|
+|56|Férosinge|Poké Radar : Chenal 226, Route 225|❌|
+|78|Galopa|Évolution de Ponyta au niveau 40|❌|
+|430|Corboss|Évolution de Cornèbre en utilisant une Pierre Nuit|❌|
