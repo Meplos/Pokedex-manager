@@ -43,6 +43,12 @@ const genMap = {
     pokename: 2,
     pokelocate: 4,
   },
+  6: {
+    url: "https://www.pokebip.com/page/jeuxvideo/pokemon-x-y/pokedex_regional",
+    pokenumber: 0,
+    pokename: 3,
+    pokelocate: 6,
+  },
   7: {
     url:
       "https://www.pokebip.com/page/jeuxvideo/pokemon_ultra_soleil_ultra_lune/pokedex_alola",
@@ -95,17 +101,28 @@ async function getPokedex(url) {
   const page = await browser.newPage();
   await page.goto(url);
   const pkdx = await page.evaluate(() => {
-    const table = document.querySelectorAll("table.bipcode")[0].rows;
-    let map = new Array();
-    for (let index = 1; index < table.length; index++) {
-      const pkmn = table[index];
-      map[index - 1] = new Array();
-      for (let i = 0; i < pkmn.cells.length; i++) {
-        map[index - 1][i] = pkmn.cells[i].innerText;
+    let pkdxs = new Array();
+    const allTable = document.querySelectorAll("table.bipcode");
+    for (let iTable = 0; iTable < allTable.length; iTable++) {
+      /** Browse all "pokedex" table of the page */
+      const current = allTable[iTable].rows;
+      let map = new Array();
+      for (let index = 1; index < current.length; index++) {
+        const pkmn = current[index];
+        map[index - 1] = new Array();
+        for (let i = 0; i < pkmn.cells.length; i++) {
+          map[index - 1][i] = pkmn.cells[i].innerText;
+        }
       }
+      pkdxs[iTable] = map;
     }
-    return map;
+
+    pkdxs = pkdxs.reduce((accumulator, currentValue) =>
+      accumulator.concat(currentValue)
+    );
+    return pkdxs;
   });
+
   await browser.close();
   return pkdx;
 }
