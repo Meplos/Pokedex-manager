@@ -8,11 +8,13 @@
 
 ## Dependencies
 
-| Package   | Version |
-| --------- | ------- |
-| node      | 15.1.0  |
-| npm       | 6.14.8  |
-| Puppeteer | 8.0.0   |
+| Package      | Version |
+| ------------ | ------- |
+| node         | 15.1.0  |
+| npm          | 6.14.8  |
+| Puppeteer    | 8.0.0   |
+| line-reader  | 0.4.0   |
+| line-replace | 2.0.1   |
 
 ## Install & Use
 
