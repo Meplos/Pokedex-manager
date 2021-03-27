@@ -23,8 +23,6 @@ function replaceLine(filepath, newLine, lineNumber) {
     addNewLine: false,
     callback: ({ file, line, text, replaceText, error }) => {
       if (error) console.log(`ERR: ${error}`);
-      console.log(text);
-      console.log(replaceText);
     },
   });
 }
