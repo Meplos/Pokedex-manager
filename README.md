@@ -2,7 +2,9 @@
 
 ## Description
 
-**GetUncatchPokemonInfo** is a script, which allow user to easily get info from pokemon which were not in already in pokedex like name and location.
+- **GetuncaugthPokemonInfo**: Allow user to easily get info from pokemon which were not in already in pokedex like name and location.
+
+- **CatchPokemon**: After generate file with _GetuncaugthPokemonInfo_, you can easily modify done colone to check pokemon you caugth.
 
 ## Dependencies
 
@@ -16,16 +18,20 @@
 
 ```
 $ npm i
-$ node GetUncatchPokemonInfo.js listing.csv out.md genversion
+$ node ./src/GetUncaugthPokemonInfo.js listing.csv out.md genversion
+$ node ./src/CatchPokemon.js out.md pkmnNumber
+
 ```
 
 ### Use on linux
 
-Add getUncatchPokemon launch script to your PATH.
+Add getuncaugthPokemon launch script to your PATH.
 
 ```
 $ export PATH=/install/dir/script:${PATH}
-$ getUncatchPokemonInfo listing.csv out.md genversion
+$ getuncaugthPokemonInfo listing.csv out.md genversion
+$ catchPkmn out.md pkmnNumber
+
 ```
 
 ### Arguments
@@ -36,7 +42,7 @@ $ getUncatchPokemonInfo listing.csv out.md genversion
 | Num | Name | Location | Done |
 | --- | ---- | -------- | ---- |
 
-- **genversion**: Pokemon génération number.
+- **genversion**: pokemon génération number.
   Supported version:
 
   | Generation    | Parameter |
@@ -50,3 +56,5 @@ $ getUncatchPokemonInfo listing.csv out.md genversion
   | SS            | 8         |
   | Isle of armor | IOA       |
   | Crown tundra  | CT        |
+
+- **pkmnNumber**: number of the pokemon in the pokedex.

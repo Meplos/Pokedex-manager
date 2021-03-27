@@ -110,53 +110,55 @@ async function getPokedex(url) {
   return pkdx;
 }
 /**
- * Write uncatched pokemon information in markdown table
- * @param uncatched: pokemon uncatched by the user
+ * Write uncaugthed pokemon information in markdown table
+ * @param uncaugthed: pokemon uncaugthed by the user
  * @param filename: file to write
  * @param gen: generation object
  */
-function writeMarkdown(uncatched, filename, gen) {
+function writeMarkdown(uncaugthed, filename, gen) {
   fs.writeFileSync(filename, "|Num.|Name|Location|Done?|\n");
   fs.appendFileSync(filename, "|---|---|---|---|\n");
-  for (let i = 0; i < uncatched.length; i++) {
+  for (let i = 0; i < uncaugthed.length; i++) {
     fs.appendFileSync(
       filename,
       "|" +
-        uncatched[i][gen.pokenumber] +
+        uncaugthed[i][gen.pokenumber] +
         "|" +
-        uncatched[i][gen.pokename] +
+        uncaugthed[i][gen.pokename] +
         "|" +
-        uncatched[i][gen.pokelocate].replace("\n", " ") +
+        uncaugthed[i][gen.pokelocate].replace("\n", " ") +
         "|❌|\n"
     );
   }
 }
 /**
- * Get Uncatch pokemon information
- * @param  uncatchedIndexList: list of number
+ * Get uncaugth pokemon information
+ * @param  uncaugthedIndexList: list of number
  * @param  pkdx: all pokedex information
- * @returns list of all pokemon uncatched by the user
+ * @returns list of all pokemon uncaugthed by the user
  */
-function getuncatched(uncatchedIndexList, pkdx) {
-  let uncatched = [];
-  for (let i = 0; i < uncatchedIndexList.length; i++) {
-    if (!pkdx[uncatchedIndexList[i] - 1]) {
+function getuncaugthed(uncaugthedIndexList, pkdx) {
+  let uncaugthed = [];
+  for (let i = 0; i < uncaugthedIndexList.length; i++) {
+    if (!pkdx[uncaugthedIndexList[i] - 1]) {
       console.log(
-        `POKEMON N°${uncatchedIndexList[i]} doesn't exist in this generation`
+        `POKEMON N°${uncaugthedIndexList[i]} doesn't exist in this generation`
       );
       continue;
     }
-    uncatched[i] = pkdx[uncatchedIndexList[i] - 1];
+    uncaugthed[i] = pkdx[uncaugthedIndexList[i] - 1];
   }
-  return uncatched;
+  return uncaugthed;
 }
 
 function displayHelp() {
   console.log("RUN:");
   console.log(
-    "\twith node : node src/GetUncatchPokemon input.csv out.md genVersion"
+    "\twith node : node src/GetuncaugthPokemon input.csv out.md genVersion"
   );
-  console.log("\tlinux script : getUncatchPokemon input.csv out.md genVersion");
+  console.log(
+    "\tlinux script : getuncaugthPokemon input.csv out.md genVersion"
+  );
   console.log("\tw10 script: WIP");
   console.log("\n");
   console.log("PARAMETER");
@@ -176,6 +178,13 @@ function main(argv) {
     displayHelp();
     return;
   }
+
+  /**Check input file exist */
+  if (!fs.existsSync(argv[0])) {
+    console.log(`ERR: ${argv[0]} don't exist`);
+    return;
+  }
+
   const indexList = readPkmnIndex(argv[0]);
   const gen = genMap[argv[2]];
   if (!gen) {
@@ -183,7 +192,7 @@ function main(argv) {
     return;
   }
   getPokedex(gen.url).then((res) => {
-    const missPokemon = getuncatched(indexList, res);
+    const missPokemon = getuncaugthed(indexList, res);
     writeMarkdown(missPokemon, argv[1], gen);
   });
 }
